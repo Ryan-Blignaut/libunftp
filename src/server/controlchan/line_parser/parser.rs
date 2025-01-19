@@ -117,11 +117,12 @@ where
             let line = parse_to_eol(cmd_params)?;
             let path = line
                 .split(|&b| b == b' ')
-                .filter(|s| !line.is_empty() && !s.starts_with(b"-"))
+                .filter(|s| !s.is_empty() && !s.starts_with(b"-"))
                 .map(|s| String::from_utf8_lossy(s).to_string())
-                .next();
+                .collect::<Vec<_>>()
+                .join(" ");
             // Note that currently we just throw arguments away.
-            Command::List { options: None, path }
+            Command::List { options: None, path: Some(path) }
         }
         "NLST" => {
             let path = parse_to_eol(cmd_params)?;
